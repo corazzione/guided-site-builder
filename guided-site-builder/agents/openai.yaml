@@ -1,0 +1,4 @@
+interface:
+  display_name: "Guided Site Builder"
+  short_description: "Plan and build websites through a guided client workflow."
+  default_prompt: "Use guided-site-builder to plan a website, collect decisions, generate visual labs, and build it step by step."

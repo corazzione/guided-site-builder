@@ -1,0 +1,1349 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Etapa 7 - Laboratorio de Navbar e Footer</title>
+  <style>
+    :root {
+      --ink: oklch(22% 0.035 250);
+      --muted: oklch(48% 0.035 250);
+      --paper: oklch(97% 0.012 92);
+      --soft: oklch(91% 0.022 92);
+      --line: oklch(82% 0.025 92);
+      --brand: oklch(49% 0.13 172);
+      --brand-dark: oklch(34% 0.09 172);
+      --accent: oklch(67% 0.14 52);
+      --shadow: 0 24px 70px oklch(25% 0.03 250 / 18%);
+      --radius: 8px;
+      font-family: ui-sans-serif, "Segoe UI", system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        linear-gradient(135deg, oklch(96% 0.018 100), oklch(91% 0.035 174)),
+        var(--paper);
+    }
+
+    button, a { font: inherit; }
+
+    .app {
+      display: grid;
+      grid-template-columns: 320px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    .panel {
+      border-right: 1px solid var(--line);
+      background: oklch(98% 0.01 92 / 92%);
+      padding: 28px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--brand-dark);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 30px;
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+
+    .intro {
+      margin: 14px 0 24px;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 15px;
+    }
+
+    .control-group {
+      display: grid;
+      gap: 10px;
+      margin: 24px 0;
+    }
+
+    .label {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .segmented, .variant-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .segmented {
+      grid-template-columns: 1fr 1fr;
+      padding: 4px;
+      background: var(--soft);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+    .segmented button,
+    .variant-list button,
+    .choice button {
+      border: 0;
+      cursor: pointer;
+      color: var(--ink);
+      background: transparent;
+      border-radius: 6px;
+      min-height: 42px;
+      transition: transform .18s ease, background .18s ease, color .18s ease;
+    }
+
+    .segmented button.active,
+    .variant-list button.active {
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    .variant-list button {
+      text-align: left;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      background: oklch(99% 0.006 92);
+      font-weight: 750;
+    }
+
+    .variant-list small {
+      display: block;
+      color: inherit;
+      opacity: .72;
+      font-weight: 500;
+      margin-top: 3px;
+    }
+
+    .choice {
+      display: grid;
+      gap: 8px;
+    }
+
+    .choice button {
+      background: var(--brand-dark);
+      color: var(--paper);
+      font-weight: 800;
+    }
+
+    .choice button.secondary {
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+
+    .note {
+      border: 1px solid color-mix(in oklch, var(--brand) 22%, var(--line));
+      background: color-mix(in oklch, var(--brand) 8%, var(--paper));
+      border-radius: var(--radius);
+      padding: 13px;
+      color: var(--brand-dark);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .refine-panel {
+      display: none;
+      gap: 14px;
+      padding-top: 4px;
+    }
+
+    .refine-panel.open {
+      display: grid;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .mini-grid button {
+      border: 1px solid var(--line);
+      background: oklch(99% 0.006 92);
+      color: var(--ink);
+      border-radius: 6px;
+      min-height: 38px;
+      cursor: pointer;
+      font-weight: 750;
+    }
+
+    .mini-grid button.active {
+      background: var(--brand-dark);
+      color: var(--paper);
+      border-color: var(--brand-dark);
+    }
+
+    .step {
+      display: none;
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .step.active {
+      display: grid;
+    }
+
+    .step-tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      margin: 22px 0 8px;
+    }
+
+    .step-tabs button {
+      min-height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: oklch(99% 0.006 92);
+      color: var(--muted);
+      font-weight: 850;
+      cursor: pointer;
+    }
+
+    .step-tabs button.active {
+      background: var(--brand-dark);
+      color: var(--paper);
+      border-color: var(--brand-dark);
+    }
+
+    .copy-box {
+      width: 100%;
+      min-height: 180px;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      color: var(--ink);
+      background: oklch(99% 0.006 92);
+      line-height: 1.45;
+      font: 13px ui-monospace, "Cascadia Mono", Consolas, monospace;
+    }
+
+    .chat-only {
+      border: 1px dashed color-mix(in oklch, var(--accent) 60%, var(--line));
+      background: color-mix(in oklch, var(--accent) 12%, var(--paper));
+      color: oklch(28% 0.055 58);
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .stage {
+      padding: 30px;
+      display: grid;
+      align-content: start;
+      gap: 22px;
+    }
+
+    .viewport {
+      width: min(100%, 1120px);
+      margin: 0 auto;
+      border: 1px solid oklch(72% 0.028 92);
+      border-radius: 8px;
+      background: oklch(96% 0.012 94);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: max-width .25s ease;
+    }
+
+    .viewport.mobile {
+      max-width: 390px;
+    }
+
+    .viewport.desktop {
+      max-width: 1120px;
+    }
+
+    .browser-bar {
+      height: 34px;
+      background: oklch(88% 0.018 96);
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0 13px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    .dot:nth-child(2) { background: oklch(72% 0.12 128); }
+    .dot:nth-child(3) { background: oklch(58% 0.10 250); }
+
+    .site {
+      min-height: 660px;
+      background: var(--paper);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 900;
+      color: inherit;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .logo-mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      color: var(--paper);
+      background: var(--brand-dark);
+      border-radius: 7px;
+      font-size: 16px;
+    }
+
+    .nav-link, .drop-trigger {
+      color: inherit;
+      text-decoration: none;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      padding: 10px 8px;
+      border-radius: 6px;
+      font-weight: 750;
+    }
+
+    .nav-link:hover, .drop-trigger:hover {
+      background: color-mix(in oklch, var(--brand) 12%, transparent);
+    }
+
+    .cta {
+      border: 0;
+      border-radius: 6px;
+      background: var(--brand-dark);
+      color: var(--paper);
+      padding: 12px 16px;
+      font-weight: 850;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 42px;
+      white-space: nowrap;
+    }
+
+    .dropdown {
+      position: relative;
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      top: calc(100% + 10px);
+      left: 0;
+      min-width: 235px;
+      background: oklch(99% 0.008 92);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 18px 55px oklch(24% 0.03 250 / 16%);
+      padding: 8px;
+      display: none;
+      z-index: 30;
+    }
+
+    .dropdown.open .dropdown-menu {
+      display: grid;
+    }
+
+    .dropdown-menu a {
+      color: var(--ink);
+      text-decoration: none;
+      padding: 11px;
+      border-radius: 6px;
+      display: grid;
+      gap: 2px;
+    }
+
+    .dropdown-menu a:hover {
+      background: var(--soft);
+    }
+
+    .dropdown-menu span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .mobile-toggle {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: transparent;
+      color: inherit;
+      width: 44px;
+      height: 42px;
+      cursor: pointer;
+      font-size: 22px;
+      display: none;
+    }
+
+    .mobile-menu {
+      display: none;
+      padding: 8px 18px 18px;
+      gap: 8px;
+      border-top: 1px solid var(--line);
+      background: oklch(98% 0.008 92);
+    }
+
+    .mobile-menu.open {
+      display: grid;
+    }
+
+    .mobile-menu a, .mobile-menu button {
+      color: var(--ink);
+      text-align: left;
+      text-decoration: none;
+      padding: 12px 10px;
+      border-radius: 6px;
+      border: 0;
+      background: transparent;
+      font-weight: 750;
+    }
+
+    .mobile-menu .cta {
+      color: var(--paper);
+      text-align: center;
+      margin-top: 4px;
+    }
+
+    .nav-classic {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 34px;
+      background: oklch(99% 0.006 92);
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .site.compact .nav-classic { padding: 10px 24px; }
+    .site.comfortable .nav-classic { padding: 18px 34px; }
+    .site.spacious .nav-classic { padding: 28px 46px; }
+    .site.compact .nav-pill { padding: 8px 10px 8px 14px; }
+    .site.comfortable .nav-pill { padding: 12px 14px 12px 18px; }
+    .site.spacious .nav-pill { padding: 18px 20px 18px 24px; }
+    .site.compact .nav-conversion { padding: 10px 24px; }
+    .site.comfortable .nav-conversion { padding: 14px 30px; }
+    .site.spacious .nav-conversion { padding: 22px 42px; }
+    .site.compact .nav-boutique { padding: 14px 28px; }
+    .site.comfortable .nav-boutique { padding: 22px 34px; }
+    .site.spacious .nav-boutique { padding: 32px 48px; }
+
+    .site.left-cta .links { margin-left: auto; }
+    .site.left-cta .desktop-only { order: -1; }
+    .site.center-logo .nav-classic,
+    .site.center-logo .nav-pill {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+    }
+    .site.center-logo .nav-classic .brand,
+    .site.center-logo .nav-pill .brand {
+      grid-column: 2;
+      grid-row: 1;
+    }
+    .site.center-logo .nav-classic .links,
+    .site.center-logo .nav-pill .links {
+      grid-column: 1;
+      grid-row: 1;
+      justify-content: flex-start;
+    }
+    .site.center-logo .nav-classic .desktop-only,
+    .site.center-logo .nav-pill .desktop-only {
+      grid-column: 3;
+      grid-row: 1;
+      justify-self: end;
+    }
+
+    .site.transparent .nav-classic,
+    .site.transparent .nav-boutique {
+      background: transparent;
+      border-bottom-color: transparent;
+    }
+
+    .site.glass .nav-classic,
+    .site.glass .nav-pill,
+    .site.glass .nav-boutique {
+      background: oklch(98% 0.01 92 / 68%);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 18px 55px oklch(24% 0.03 250 / 14%);
+    }
+
+    .site.solid .nav-classic,
+    .site.solid .nav-boutique {
+      background: oklch(99% 0.006 92);
+    }
+
+    .site.solid .nav-pill {
+      background: oklch(98% 0.01 92);
+    }
+
+    .site.motion-subtle .nav-link,
+    .site.motion-subtle .cta,
+    .site.motion-subtle .mobile-toggle,
+    .site.motion-lift .nav-link,
+    .site.motion-lift .cta,
+    .site.motion-lift .mobile-toggle {
+      transition: transform .24s cubic-bezier(.16, 1, .3, 1), background .18s ease, box-shadow .24s ease;
+    }
+
+    .site.motion-subtle .nav-link:hover,
+    .site.motion-subtle .cta:hover,
+    .site.motion-subtle .mobile-toggle:hover {
+      transform: translateY(-1px);
+    }
+
+    .site.motion-lift .nav-link:hover,
+    .site.motion-lift .cta:hover,
+    .site.motion-lift .mobile-toggle:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 24px oklch(24% 0.03 250 / 10%);
+    }
+
+    .nav-classic .links,
+    .nav-pill .links,
+    .nav-conversion .links,
+    .nav-boutique .links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-pill-wrap {
+      padding: 20px 30px 0;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .nav-pill {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 12px 14px 12px 18px;
+      border: 1px solid color-mix(in oklch, var(--brand) 24%, var(--line));
+      background: oklch(98% 0.01 92 / 92%);
+      box-shadow: 0 18px 45px oklch(26% 0.03 250 / 14%);
+      border-radius: 999px;
+    }
+
+    .nav-conversion {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px 18px;
+      padding: 14px 30px;
+      background: var(--brand-dark);
+      color: var(--paper);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .nav-conversion .topline {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: flex-end;
+      gap: 18px;
+      font-size: 13px;
+      opacity: .9;
+    }
+
+    .nav-conversion .cta {
+      background: var(--accent);
+      color: oklch(22% 0.04 55);
+    }
+
+    .nav-boutique {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 18px;
+      padding: 22px 34px;
+      border-bottom: 1px solid var(--line);
+      background: oklch(96% 0.018 76);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .nav-boutique .links:first-child { justify-content: flex-end; }
+    .nav-boutique .links:last-child { justify-content: flex-start; }
+
+    .nav-minimal,
+    .nav-split,
+    .nav-drawer,
+    .nav-mega {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 20px 34px;
+      border-bottom: 1px solid var(--line);
+      background: oklch(99% 0.006 92);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .nav-minimal .links,
+    .nav-split .links,
+    .nav-drawer .links,
+    .nav-mega .links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-minimal {
+      background: transparent;
+      border-bottom-color: transparent;
+      padding-inline: 48px;
+    }
+
+    .nav-minimal .links {
+      gap: 22px;
+    }
+
+    .nav-split {
+      background: oklch(94% 0.028 150);
+    }
+
+    .nav-drawer {
+      justify-content: flex-start;
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    .nav-drawer .brand {
+      margin-right: auto;
+    }
+
+    .nav-drawer .mobile-toggle {
+      display: inline-grid;
+      place-items: center;
+      color: var(--paper);
+      border-color: color-mix(in oklch, var(--paper) 28%, transparent);
+    }
+
+    .nav-mega {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      background: oklch(98% 0.014 92);
+    }
+
+    .nav-mega .dropdown-menu {
+      min-width: 520px;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .hero {
+      min-height: 410px;
+      padding: 78px 48px 60px;
+      display: grid;
+      align-content: center;
+      max-width: 820px;
+    }
+
+    .hero h2 {
+      margin: 0;
+      font-size: clamp(42px, 7vw, 88px);
+      line-height: .93;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      color: var(--muted);
+      max-width: 58ch;
+      line-height: 1.65;
+      font-size: 18px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .ghost {
+      border: 1px solid var(--line);
+      color: var(--ink);
+      background: transparent;
+    }
+
+    .footer {
+      padding: 42px 42px 28px;
+      border-top: 1px solid var(--line);
+      display: grid;
+      gap: 26px;
+    }
+
+    .footer.cta-first {
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    .footer.editorial {
+      background: oklch(92% 0.028 76);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.3fr repeat(3, 1fr);
+      gap: 28px;
+    }
+
+    .footer h3, .footer h4, .footer p { margin-top: 0; }
+    .footer p, .footer a { color: color-mix(in oklch, currentColor 74%, transparent); }
+    .footer a { display: block; text-decoration: none; margin: 8px 0; }
+    .footer-bottom {
+      border-top: 1px solid color-mix(in oklch, currentColor 18%, transparent);
+      padding-top: 18px;
+      color: color-mix(in oklch, currentColor 62%, transparent);
+      font-size: 13px;
+    }
+
+    .mobile .site { min-height: 720px; }
+    .mobile .nav-classic,
+    .mobile .nav-pill,
+    .mobile .nav-conversion,
+    .mobile .nav-boutique,
+    .mobile .nav-minimal,
+    .mobile .nav-split,
+    .mobile .nav-drawer,
+    .mobile .nav-mega {
+      display: flex;
+      grid-template-columns: none;
+      padding: 14px 16px;
+    }
+
+    .mobile .nav-pill-wrap { padding: 14px 12px 0; }
+    .mobile .nav-pill { border-radius: 8px; }
+    .mobile .links,
+    .mobile .desktop-only,
+    .mobile .nav-conversion .topline {
+      display: none;
+    }
+
+    .mobile .mobile-toggle {
+      display: inline-grid;
+      place-items: center;
+      margin-left: auto;
+    }
+
+    .mobile .nav-boutique {
+      justify-content: space-between;
+      background: oklch(96% 0.018 76);
+    }
+
+    .mobile .nav-drawer,
+    .mobile .nav-mega,
+    .mobile .nav-minimal,
+    .mobile .nav-split {
+      justify-content: space-between;
+    }
+
+    @keyframes navReveal {
+      from { opacity: .35; transform: translateY(-16px) scale(.985); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes navPulse {
+      0%, 100% { box-shadow: 0 0 0 oklch(49% 0.13 172 / 0%); }
+      45% { box-shadow: 0 0 0 7px oklch(49% 0.13 172 / 13%); }
+    }
+
+    .site.motion-subtle header,
+    .site.motion-subtle .nav-pill-wrap {
+      animation: navReveal .45s cubic-bezier(.16, 1, .3, 1);
+    }
+
+    .site.motion-lift header,
+    .site.motion-lift .nav-pill-wrap {
+      animation: navReveal .52s cubic-bezier(.16, 1, .3, 1), navPulse 1.2s ease .25s;
+    }
+
+    .site.motion-none header,
+    .site.motion-none .nav-pill-wrap,
+    .site.motion-none * {
+      animation: none;
+      transition: none;
+    }
+
+    .mobile .hero {
+      min-height: 360px;
+      padding: 54px 24px 42px;
+    }
+
+    .mobile .hero h2 {
+      font-size: 42px;
+    }
+
+    .mobile .footer {
+      padding: 34px 24px 24px;
+    }
+
+    .mobile .footer-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 900px) {
+      .app { grid-template-columns: 1fr; }
+      .panel {
+        position: static;
+        height: auto;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .stage { padding: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <aside class="panel">
+      <p class="eyebrow">Etapa 7</p>
+      <h1>Escolha real de navbar e footer</h1>
+      <p class="intro">Esta etapa funciona como um funil de criacao. O cliente escolhe uma direcao, responde sobre ela, depois o agente refina no chat e atualiza o HTML com a proxima rodada.</p>
+      <div class="note">Nada aqui e definitivo. O HTML coleta escolhas e mostra comportamento real; novas variacoes sao geradas pelo agente no chat.</div>
+
+      <div class="step-tabs" aria-label="Etapas de decisao">
+        <button class="active" data-step-tab="1">1</button>
+        <button data-step-tab="2">2</button>
+        <button data-step-tab="3">3</button>
+        <button data-step-tab="4">4</button>
+      </div>
+
+      <section class="control-group">
+        <span class="label">Visualizacao</span>
+        <div class="segmented" aria-label="Alternar visualizacao">
+          <button class="active" data-view="desktop">PC</button>
+          <button data-view="mobile">Mobile</button>
+        </div>
+      </section>
+
+      <section class="step active" data-step="1">
+        <span class="label">1. Escolha a familia da navbar</span>
+        <div class="variant-list" aria-label="Variantes de navbar">
+          <button class="active" data-variant="classic">Classica fixa <small>Confiavel, clara, institucional</small></button>
+          <button data-variant="pill">Pill flutuante <small>Moderna, premium, leve</small></button>
+          <button data-variant="conversion">Conversao <small>WhatsApp e CTA sempre fortes</small></button>
+          <button data-variant="boutique">Boutique central <small>Simetrica, editorial, refinada</small></button>
+          <button data-variant="minimal">Minimalista editorial <small>Poucos links, muito respiro</small></button>
+          <button data-variant="split">Split com CTA duplo <small>Links de um lado, acoes do outro</small></button>
+          <button data-variant="drawer">Drawer-first <small>Menu visual, bom para portfolio</small></button>
+          <button data-variant="mega">Mega menu <small>Para sites com muitas paginas</small></button>
+        </div>
+        <div class="chat-only">Quer mais familias? Peca no chat: "gere mais 6 navbars com outra pegada". O agente atualiza este laboratorio com a nova rodada.</div>
+        <div class="choice">
+          <button data-next-step="2">Gostei desta base, refinar</button>
+          <button class="secondary" data-chat-request="mais variantes de navbar">Quero pedir mais variantes no chat</button>
+          <button class="secondary" data-next-step="2">Decida por mim</button>
+        </div>
+      </section>
+
+      <section class="step" data-step="2" id="refinePanel">
+        <span class="label">2. Refinar a navbar escolhida</span>
+        <div class="note">Agora editamos apenas a familia escolhida. Se houver design system, seguimos suas regras. Se nao houver, testamos variacoes possiveis e o agente recomenda a melhor.</div>
+
+        <span class="label">Padding</span>
+        <div class="mini-grid">
+          <button data-refine="spacing" data-value="compact">Compacto</button>
+          <button class="active" data-refine="spacing" data-value="comfortable">Confortavel</button>
+          <button data-refine="spacing" data-value="spacious">Espacoso</button>
+          <button data-refine="spacing" data-value="comfortable">Decida</button>
+        </div>
+
+        <span class="label">Organizacao</span>
+        <div class="mini-grid">
+          <button class="active" data-refine="layout" data-value="default-layout">Padrao</button>
+          <button data-refine="layout" data-value="center-logo">Logo centro</button>
+          <button data-refine="layout" data-value="left-cta">CTA antes</button>
+          <button data-refine="layout" data-value="default-layout">Decida</button>
+        </div>
+
+        <span class="label">Material</span>
+        <div class="mini-grid">
+          <button class="active" data-refine="material" data-value="solid">Solida</button>
+          <button data-refine="material" data-value="transparent">Transparente</button>
+          <button data-refine="material" data-value="glass">Glass</button>
+          <button data-refine="material" data-value="solid">Decida</button>
+        </div>
+
+        <span class="label">Animacao</span>
+        <div class="mini-grid">
+          <button data-refine="motion" data-value="motion-none">Sem motion</button>
+          <button class="active" data-refine="motion" data-value="motion-subtle">Sutil</button>
+          <button data-refine="motion" data-value="motion-lift">Mais viva</button>
+          <button data-refine="motion" data-value="motion-subtle">Decida</button>
+        </div>
+        <div class="choice">
+          <button data-next-step="3">Navbar refinada, escolher footer</button>
+          <button class="secondary" data-chat-request="mais refinamentos para navbar">Pedir mais refinamentos no chat</button>
+        </div>
+      </section>
+
+      <section class="step" data-step="3">
+        <span class="label">3. Footer compativel</span>
+        <div class="variant-list" aria-label="Variantes de footer">
+          <button class="active" data-footer="institutional">Institucional <small>Links, contato e redes</small></button>
+          <button data-footer="cta">CTA-first <small>Fechamento para conversao</small></button>
+          <button data-footer="editorial">Editorial <small>Mais marca, menos tabela</small></button>
+        </div>
+        <div class="choice">
+          <button data-next-step="4">Gerar resumo para o agente</button>
+          <button class="secondary" data-chat-request="mais footers compativeis">Pedir mais footers no chat</button>
+        </div>
+      </section>
+
+      <section class="step" data-step="4">
+        <span class="label">4. Copiar escolhas</span>
+        <textarea class="copy-box" id="summaryBox" readonly></textarea>
+        <div class="choice">
+          <button id="copySummary">Copiar resumo</button>
+          <button class="secondary" data-chat-request="prosseguir com esta navbar e footer">Prosseguir no chat</button>
+        </div>
+      </section>
+    </aside>
+
+    <section class="stage">
+      <div class="viewport desktop" id="viewport">
+        <div class="browser-bar" aria-hidden="true">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        </div>
+        <div class="site comfortable default-layout solid motion-subtle" id="sitePreview">
+          <div id="navbarMount"></div>
+          <section class="hero">
+            <h2>Um site que parece feito com direcao, nao com pressa.</h2>
+            <p>Esta area simula o conteudo abaixo do header. Assim o cliente percebe proporcao, comportamento sticky, dropdowns e como a navegacao conversa com a primeira dobra.</p>
+            <div class="hero-actions">
+              <a class="cta" href="#">Solicitar orcamento</a>
+              <a class="cta ghost" href="#">Ver servicos</a>
+            </div>
+          </section>
+          <div id="footerMount"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <template id="classic">
+    <header class="nav-classic">
+      <a class="brand" href="#"><span class="logo-mark">L</span><span>Logo Cliente</span></a>
+      <nav class="links" aria-label="Principal">
+        <a class="nav-link" href="#">Home</a>
+        <div class="dropdown">
+          <button class="drop-trigger">Servicos ▾</button>
+          <div class="dropdown-menu">
+            <a href="#">Criacao de Sites <span>Institucional, landing pages e lojas</span></a>
+            <a href="#">Identidade Visual <span>Paleta, tipografia e direcao</span></a>
+            <a href="#">Manutencao <span>Melhorias continuas e suporte</span></a>
+          </div>
+        </div>
+        <a class="nav-link" href="#">Projetos</a>
+        <a class="nav-link" href="#">Depoimentos</a>
+        <a class="nav-link" href="#">Contato</a>
+      </nav>
+      <a class="cta desktop-only" href="#">Orcamento</a>
+      <button class="mobile-toggle" aria-label="Abrir menu">☰</button>
+    </header>
+    <nav class="mobile-menu">
+      <a href="#">Home</a><a href="#">Servicos</a><a href="#">Projetos</a><a href="#">Depoimentos</a><a href="#">Contato</a>
+      <a class="cta" href="#">Solicitar orcamento</a>
+    </nav>
+  </template>
+
+  <template id="pill">
+    <div class="nav-pill-wrap">
+      <header class="nav-pill">
+        <a class="brand" href="#"><span class="logo-mark">L</span><span>Logo Cliente</span></a>
+        <nav class="links" aria-label="Principal">
+          <a class="nav-link" href="#">Home</a>
+          <div class="dropdown">
+            <button class="drop-trigger">Solucoes ▾</button>
+            <div class="dropdown-menu">
+              <a href="#">Site Premium <span>Para marcas com alto valor percebido</span></a>
+              <a href="#">Landing Page <span>Para campanhas e captacao</span></a>
+              <a href="#">SEO Local <span>Encontrabilidade no Google</span></a>
+            </div>
+          </div>
+          <a class="nav-link" href="#">Cases</a>
+          <a class="nav-link" href="#">Sobre</a>
+        </nav>
+        <a class="cta desktop-only" href="#">Comecar</a>
+        <button class="mobile-toggle" aria-label="Abrir menu">☰</button>
+      </header>
+      <nav class="mobile-menu">
+        <a href="#">Home</a><a href="#">Solucoes</a><a href="#">Cases</a><a href="#">Sobre</a><a href="#">Contato</a>
+        <a class="cta" href="#">Comecar projeto</a>
+      </nav>
+    </div>
+  </template>
+
+  <template id="conversion">
+    <header class="nav-conversion">
+      <div class="topline"><span>Atendimento hoje</span><span>WhatsApp: (00) 00000-0000</span></div>
+      <a class="brand" href="#"><span class="logo-mark">L</span><span>Logo Cliente</span></a>
+      <nav class="links" aria-label="Principal">
+        <a class="nav-link" href="#">Servicos</a>
+        <div class="dropdown">
+          <button class="drop-trigger">Orcamentos ▾</button>
+          <div class="dropdown-menu">
+            <a href="#">Site Institucional <span>Projeto completo</span></a>
+            <a href="#">Landing Page <span>Entrega rapida para campanha</span></a>
+            <a href="#">Reformulacao <span>Melhorar um site existente</span></a>
+          </div>
+        </div>
+        <a class="nav-link" href="#">Provas</a>
+        <a class="nav-link" href="#">Contato</a>
+        <a class="cta" href="#">Agendar agora</a>
+      </nav>
+      <button class="mobile-toggle" aria-label="Abrir menu">☰</button>
+    </header>
+    <nav class="mobile-menu">
+      <a href="#">Servicos</a><a href="#">Orcamentos</a><a href="#">Provas</a><a href="#">Contato</a>
+      <a class="cta" href="#">Agendar agora</a>
+    </nav>
+  </template>
+
+  <template id="boutique">
+    <header class="nav-boutique">
+      <nav class="links" aria-label="Secundaria esquerda">
+        <a class="nav-link" href="#">Sobre</a>
+        <div class="dropdown">
+          <button class="drop-trigger">Servicos ▾</button>
+          <div class="dropdown-menu">
+            <a href="#">Consultoria <span>Direcao antes do layout</span></a>
+            <a href="#">Projeto Visual <span>Identidade aplicada ao site</span></a>
+          </div>
+        </div>
+      </nav>
+      <a class="brand" href="#"><span class="logo-mark">L</span><span>Logo Cliente</span></a>
+      <nav class="links" aria-label="Secundaria direita">
+        <a class="nav-link" href="#">Portfolio</a>
+        <a class="nav-link" href="#">Contato</a>
+      </nav>
+      <button class="mobile-toggle" aria-label="Abrir menu">☰</button>
+    </header>
+    <nav class="mobile-menu">
+      <a href="#">Sobre</a><a href="#">Servicos</a><a href="#">Portfolio</a><a href="#">Contato</a>
+      <a class="cta" href="#">Solicitar proposta</a>
+    </nav>
+  </template>
+
+  <template id="minimal">
+    <header class="nav-minimal">
+      <a class="brand" href="#"><span class="logo-mark">L</span><span>Logo Cliente</span></a>
+      <nav class="links" aria-label="Principal">
+        <a class="nav-link" href="#">Trabalho</a>
+        <a class="nav-link" href="#">Metodo</a>
+        <a class="nav-link" href="#">Contato</a>
+      </nav>
+      <a class="cta desktop-only ghost" href="#">Briefing</a>
+      <button class="mobile-toggle" aria-label="Abrir menu">☰</button>
+    </header>
+    <nav class="mobile-menu">
+      <a href="#">Trabalho</a><a href="#">Metodo</a><a href="#">Contato</a>
+      <a class="cta" href="#">Briefing</a>
+    </nav>
+  </template>
+
+  <template id="split">
+    <header class="nav-split">
+      <a class="brand" href="#"><span class="logo-mark">L</span><span>Logo Cliente</span></a>
+      <nav class="links" aria-label="Principal">
+        <a class="nav-link" href="#">Home</a>
+        <a class="nav-link" href="#">Servicos</a>
+        <a class="nav-link" href="#">Cases</a>
+      </nav>
+      <nav class="links desktop-only" aria-label="Acoes">
+        <a class="nav-link" href="#">WhatsApp</a>
+        <a class="cta" href="#">Orcamento</a>
+      </nav>
+      <button class="mobile-toggle" aria-label="Abrir menu">☰</button>
+    </header>
+    <nav class="mobile-menu">
+      <a href="#">Home</a><a href="#">Servicos</a><a href="#">Cases</a><a href="#">WhatsApp</a>
+      <a class="cta" href="#">Orcamento</a>
+    </nav>
+  </template>
+
+  <template id="drawer">
+    <header class="nav-drawer">
+      <button class="mobile-toggle" aria-label="Abrir menu">☰</button>
+      <a class="brand" href="#"><span class="logo-mark">L</span><span>Logo Cliente</span></a>
+      <a class="cta desktop-only" href="#">Projeto</a>
+    </header>
+    <nav class="mobile-menu">
+      <a href="#">Inicio</a><a href="#">Manifesto</a><a href="#">Galeria</a><a href="#">Servicos</a><a href="#">Contato</a>
+      <a class="cta" href="#">Comecar projeto</a>
+    </nav>
+  </template>
+
+  <template id="mega">
+    <header class="nav-mega">
+      <a class="brand" href="#"><span class="logo-mark">L</span><span>Logo Cliente</span></a>
+      <nav class="links" aria-label="Principal">
+        <a class="nav-link" href="#">Home</a>
+        <div class="dropdown">
+          <button class="drop-trigger">Explorar ▾</button>
+          <div class="dropdown-menu">
+            <a href="#">Sites Institucionais <span>Credibilidade e presenca</span></a>
+            <a href="#">Landing Pages <span>Campanhas e leads</span></a>
+            <a href="#">E-commerce <span>Catalogo e vendas</span></a>
+            <a href="#">Conteudo <span>Blog, guias e SEO</span></a>
+          </div>
+        </div>
+        <a class="nav-link" href="#">Cases</a>
+        <a class="nav-link" href="#">Sobre</a>
+      </nav>
+      <a class="cta desktop-only" href="#">Falar com especialista</a>
+      <button class="mobile-toggle" aria-label="Abrir menu">☰</button>
+    </header>
+    <nav class="mobile-menu">
+      <a href="#">Home</a><a href="#">Explorar</a><a href="#">Cases</a><a href="#">Sobre</a>
+      <a class="cta" href="#">Falar com especialista</a>
+    </nav>
+  </template>
+
+  <template id="institutional">
+    <footer class="footer">
+      <div class="footer-grid">
+        <div>
+          <a class="brand" href="#"><span class="logo-mark">L</span><span>Logo Cliente</span></a>
+          <p>Sites planejados com estrategia, identidade visual e uma jornada clara ate a conversao.</p>
+        </div>
+        <div><h4>Mapa</h4><a href="#">Home</a><a href="#">Servicos</a><a href="#">Projetos</a></div>
+        <div><h4>Contato</h4><a href="#">WhatsApp</a><a href="#">Email</a><a href="#">Endereco</a></div>
+        <div><h4>Social</h4><a href="#">Instagram</a><a href="#">LinkedIn</a><a href="#">Behance</a></div>
+      </div>
+      <div class="footer-bottom">© 2026 Logo Cliente. Todos os direitos reservados.</div>
+    </footer>
+  </template>
+
+  <template id="cta">
+    <footer class="footer cta-first">
+      <div>
+        <h3>Pronto para transformar a primeira impressao da sua marca?</h3>
+        <p>Fechamento direto para levar o visitante ao proximo passo.</p>
+        <a class="cta" href="#">Pedir proposta</a>
+      </div>
+      <div class="footer-grid">
+        <div><h4>Logo Cliente</h4><p>Arquitetura, design e desenvolvimento em uma experiencia guiada.</p></div>
+        <div><h4>Paginas</h4><a href="#">Servicos</a><a href="#">Cases</a></div>
+        <div><h4>Ajuda</h4><a href="#">FAQ</a><a href="#">Contato</a></div>
+        <div><h4>Legal</h4><a href="#">Privacidade</a><a href="#">Termos</a></div>
+      </div>
+    </footer>
+  </template>
+
+  <template id="editorial">
+    <footer class="footer editorial">
+      <div>
+        <h3>Logo Cliente</h3>
+        <p>Um footer mais atmosferico, bom para marcas visuais, autorais ou premium.</p>
+      </div>
+      <div class="footer-grid">
+        <div><h4>Comece</h4><a href="#">Diagnostico</a><a href="#">Briefing</a></div>
+        <div><h4>Explore</h4><a href="#">Processo</a><a href="#">Projetos</a></div>
+        <div><h4>Converse</h4><a href="#">WhatsApp</a><a href="#">Email</a></div>
+        <div><h4>Acompanhe</h4><a href="#">Instagram</a><a href="#">LinkedIn</a></div>
+      </div>
+      <div class="footer-bottom">Design aplicado a negocio, nao decoracao solta.</div>
+    </footer>
+  </template>
+
+  <script>
+    const viewport = document.querySelector("#viewport");
+    const sitePreview = document.querySelector("#sitePreview");
+    const navbarMount = document.querySelector("#navbarMount");
+    const footerMount = document.querySelector("#footerMount");
+    const summaryBox = document.querySelector("#summaryBox");
+    const refineGroups = {
+      spacing: ["compact", "comfortable", "spacious"],
+      layout: ["default-layout", "center-logo", "left-cta"],
+      material: ["solid", "transparent", "glass"],
+      motion: ["motion-none", "motion-subtle", "motion-lift"]
+    };
+    const choices = {
+      navbar: "classic",
+      footer: "institutional",
+      spacing: "comfortable",
+      layout: "default-layout",
+      material: "solid",
+      motion: "motion-subtle",
+      requested: ""
+    };
+
+    function mountTemplate(target, id) {
+      const template = document.getElementById(id);
+      target.replaceChildren(template.content.cloneNode(true));
+      wireInteractions();
+    }
+
+    function setActive(selector, clicked) {
+      document.querySelectorAll(selector).forEach((button) => button.classList.remove("active"));
+      clicked.classList.add("active");
+    }
+
+    function goToStep(step) {
+      document.querySelectorAll("[data-step]").forEach((section) => {
+        section.classList.toggle("active", section.dataset.step === String(step));
+      });
+      document.querySelectorAll("[data-step-tab]").forEach((button) => {
+        button.classList.toggle("active", button.dataset.stepTab === String(step));
+      });
+      updateSummary();
+    }
+
+    function restartMotion() {
+      navbarMount.style.animation = "none";
+      void navbarMount.offsetHeight;
+      navbarMount.style.animation = "";
+    }
+
+    function updateSummary() {
+      if (!summaryBox) return;
+      summaryBox.value = [
+        "Etapa 7 aprovada: navbar e footer",
+        "",
+        `Navbar base: ${choices.navbar}`,
+        `Footer base: ${choices.footer}`,
+        `Padding: ${choices.spacing}`,
+        `Organizacao: ${choices.layout}`,
+        `Material: ${choices.material}`,
+        `Animacao: ${choices.motion}`,
+        "",
+        "Instrucao para o agente:",
+        "Use estas escolhas como direcao, nao como limite rigido. Gere a implementacao final integrada ao site, preservando logo, paginas, CTA, design system e responsividade. Se o design system existir, adapte material, padding e motion a ele. Se nao existir, proponha a melhor versao com base nessas decisoes.",
+        choices.requested ? `Pedido extra do cliente: ${choices.requested}` : ""
+      ].filter(Boolean).join("\n");
+    }
+
+    function wireInteractions() {
+      document.querySelectorAll(".drop-trigger").forEach((button) => {
+        button.addEventListener("click", (event) => {
+          event.stopPropagation();
+          document.querySelectorAll(".dropdown").forEach((drop) => {
+            if (drop !== button.closest(".dropdown")) drop.classList.remove("open");
+          });
+          button.closest(".dropdown").classList.toggle("open");
+        });
+      });
+
+      document.querySelectorAll(".mobile-toggle").forEach((button) => {
+        button.addEventListener("click", () => {
+          const menu = button.closest("header, .nav-pill-wrap").parentElement.querySelector(".mobile-menu") ||
+            button.closest(".nav-pill-wrap")?.querySelector(".mobile-menu");
+          if (menu) menu.classList.toggle("open");
+        });
+      });
+    }
+
+    document.addEventListener("click", () => {
+      document.querySelectorAll(".dropdown").forEach((drop) => drop.classList.remove("open"));
+    });
+
+    document.querySelectorAll("[data-view]").forEach((button) => {
+      button.addEventListener("click", () => {
+        setActive("[data-view]", button);
+        viewport.classList.toggle("mobile", button.dataset.view === "mobile");
+        viewport.classList.toggle("desktop", button.dataset.view === "desktop");
+      });
+    });
+
+    document.querySelectorAll("[data-variant]").forEach((button) => {
+      button.addEventListener("click", () => {
+        setActive("[data-variant]", button);
+        choices.navbar = button.dataset.variant;
+        mountTemplate(navbarMount, button.dataset.variant);
+        restartMotion();
+        updateSummary();
+      });
+    });
+
+    document.querySelectorAll("[data-footer]").forEach((button) => {
+      button.addEventListener("click", () => {
+        setActive("[data-footer]", button);
+        choices.footer = button.dataset.footer;
+        mountTemplate(footerMount, button.dataset.footer);
+        updateSummary();
+      });
+    });
+
+    document.querySelectorAll("[data-next-step]").forEach((button) => {
+      button.addEventListener("click", () => goToStep(button.dataset.nextStep));
+    });
+
+    document.querySelectorAll("[data-refine]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const group = button.dataset.refine;
+        button.closest(".mini-grid").querySelectorAll("button").forEach((item) => item.classList.remove("active"));
+        button.classList.add("active");
+        sitePreview.classList.remove(...refineGroups[group]);
+        sitePreview.classList.add(button.dataset.value);
+        choices[group] = button.dataset.value;
+        restartMotion();
+        updateSummary();
+      });
+    });
+
+    document.querySelectorAll("[data-chat-request]").forEach((button) => {
+      button.addEventListener("click", () => {
+        choices.requested = button.dataset.chatRequest;
+        updateSummary();
+        goToStep(4);
+      });
+    });
+
+    document.querySelectorAll("[data-step-tab]").forEach((button) => {
+      button.addEventListener("click", () => goToStep(button.dataset.stepTab));
+    });
+
+    document.querySelector("#copySummary").addEventListener("click", async () => {
+      updateSummary();
+      try {
+        await navigator.clipboard.writeText(summaryBox.value);
+      } catch (error) {
+        summaryBox.select();
+        document.execCommand("copy");
+      }
+    });
+
+    mountTemplate(navbarMount, "classic");
+    mountTemplate(footerMount, "institutional");
+    updateSummary();
+  </script>
+</body>
+</html>
