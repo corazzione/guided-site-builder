@@ -63,6 +63,26 @@ Many agents can generate a full website in seconds, but that usually creates thr
 - generate copyable decision summaries;
 - implement only after the direction is clear.
 
+## Example Visual Lab
+
+The skill can create interactive visual labs so clients choose from real interface behavior instead of text descriptions.
+
+### Navbar Family Selection
+
+![Classic navbar selection lab](docs/images/guided-site-builder-navbar-classic.png)
+
+### Refinement: Mega Menu + Glass Material
+
+![Mega menu glass refinement](docs/images/guided-site-builder-mega-glass.png)
+
+### Mobile Drawer Direction
+
+![Mobile drawer navbar variant](docs/images/guided-site-builder-mobile-drawer.png)
+
+### Copy Choices Output
+
+![Copy choices summary](docs/images/guided-site-builder-copy-choices.png)
+
 ## Core Idea
 
 The skill prevents the agent from building too early.

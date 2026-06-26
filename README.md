@@ -15,6 +15,24 @@ Every stage ends with a copyable decision summary, so the agent can continue wit
 - Supports focused component workflows like navbars, heroes, toasts, pop-ups, cards, forms, CTAs, and modals.
 - Produces paste-ready summaries after each stage.
 
+## Preview
+
+### Navbar Family Selection
+
+![Classic navbar selection lab](docs/images/guided-site-builder-navbar-classic.png)
+
+### Refinement: Mega Menu + Glass Material
+
+![Mega menu glass refinement](docs/images/guided-site-builder-mega-glass.png)
+
+### Mobile Drawer Direction
+
+![Mobile drawer navbar variant](docs/images/guided-site-builder-mobile-drawer.png)
+
+### Copy Choices Output
+
+![Copy choices summary](docs/images/guided-site-builder-copy-choices.png)
+
 ## Skill Folder
 
 The installable skill lives in:
